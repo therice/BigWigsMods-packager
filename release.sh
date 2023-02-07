@@ -192,7 +192,7 @@ usage() {
 	  -S               Create a package supporting multiple game types from a single TOC file.
 	  -u               Use Unix line-endings.
 	  -z               Skip zip file creation
-	  -T		   Skip future tag check for GitHub actions
+	  -T               Skip future tag check for GitHub actions
 	  -t topdir        Set top-level directory of checkout.
 	  -r releasedir    Set directory containing the package directory. Defaults to "$topdir/.release".
 	  -p curse-id      Set the project id used on CurseForge for localization and uploading. (Use 0 to unset the TOC value)
@@ -205,7 +205,7 @@ usage() {
 }
 
 OPTIND=1
-while getopts ":celLzusSop:dw:a:r:t:g:m:n:" opt; do
+while getopts ":celLzusSTop:dw:a:r:t:g:m:n:" opt; do
 	case $opt in
 		c) skip_copying="true" ;; # Skip copying files into the package directory
 		z) skip_zipfile="true" ;; # Skip creating a zip file
@@ -227,7 +227,7 @@ while getopts ":celLzusSop:dw:a:r:t:g:m:n:" opt; do
 			fi
 			topdir="$OPTARG"
 			;;
-		T) skip_gh_tag_check="true" ;; # Skip GitHub tag verification for future relase			
+    T) skip_gh_tag_check="true" ;; # Skip GitHub tag verification for future releases
 		s) # Create a nolib package without externals
 			nolib="true"
 			skip_externals="true"
