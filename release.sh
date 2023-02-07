@@ -58,6 +58,7 @@ skip_localization=
 skip_zipfile=
 skip_upload=
 skip_cf_upload=
+skip_gh_tag_check=
 pkgmeta_file=
 game_version=
 game_type=
@@ -190,7 +191,8 @@ usage() {
 	  -s               Create a stripped-down "nolib" package.
 	  -S               Create a package supporting multiple game types from a single TOC file.
 	  -u               Use Unix line-endings.
-	  -z               Skip zip file creation.
+	  -z               Skip zip file creation
+	  -T		   Skip future tag check for GitHub actions
 	  -t topdir        Set top-level directory of checkout.
 	  -r releasedir    Set directory containing the package directory. Defaults to "$topdir/.release".
 	  -p curse-id      Set the project id used on CurseForge for localization and uploading. (Use 0 to unset the TOC value)
@@ -225,6 +227,7 @@ while getopts ":celLzusSop:dw:a:r:t:g:m:n:" opt; do
 			fi
 			topdir="$OPTARG"
 			;;
+		T) skip_gh_tag_check="true" ;; # Skip GitHub tag verification for future relase			
 		s) # Create a nolib package without externals
 			nolib="true"
 			skip_externals="true"
@@ -401,7 +404,7 @@ fi
 # Check for GitHub Actions
 if [[ -n $GITHUB_ACTIONS ]]; then
 	# Prevent duplicate builds from multiple pushes
-	if [[ $GITHUB_EVENT_NAME == "push" && $GITHUB_REF == "refs/heads"* ]]; then
+	if [[ -z "$skip_gh_tag_check" && $GITHUB_EVENT_NAME == "push" && $GITHUB_REF == "refs/heads"* ]]; then
 		check_tag=$( git -C "$topdir" tag --points-at HEAD )
 		if [[ -n $check_tag ]]; then
 			echo "Found future tag \"${check_tag}\", not packaging."
