@@ -20,7 +20,7 @@ since that tag.
 
 For a full example workflow, please check out the [wiki page](https://github.com/BigWigsMods/packager/wiki/GitHub-Actions-workflow).
 
-### Example using [options](#Usage)
+### Example using [options](#usage)
 
 ```yaml
 - uses: BigWigsMods/packager@v2
@@ -145,8 +145,8 @@ Supported keywords and when the code block will run:
   file.
 - `no-lib-strip`: *(not supported in Lua files)* in any build other than a
   *nolib* build.
-- `retail`,`version-retail`,`version-classic`,`version-bcc`,`version-wrath`:
-  based on game version.
+- `retail`,`version-retail`,`version-classic`,`version-bcc`,`version-wrath`,
+  `version-cata`: based on game version.
 
 `do-not-package` is a bit special. Everything between the tags, including the
 tags themselves, will always be removed from the packaged file. This will cause
@@ -218,10 +218,10 @@ on the build type:
 
 `{classic}` has some additional magic:
 
-1. It will show as the non-retail build type, so `-classic`, `-bcc`, or
-   `-wrath`.
-2. It will not be shown if "-classic" or "-bcc" or "-wrath" is in the project
-   version (tag).
+1. It will show as the non-retail build type, so `-classic`, `-bcc`, `-wrath`,
+   or `-cata`.
+2. It will not be shown if `-classic`, `-bcc`, `-wrath`, or `-cata` is in the
+   project version (tag).
 3. If it is included in the file name (it is by default) and #2 does not apply,
    it will also be appended to the file label (i.e., the name shown in the file
    list on CurseForge).
@@ -234,7 +234,7 @@ appropriate versions when uploaded.
 
 ### Multiple TOC files
 
-You can create [multiple TOC files](https://wowpedia.fandom.com/wiki/TOC_format#Multiple_client_flavors),
+You can create [multiple TOC files](https://warcraft.wiki.gg/wiki/TOC_format#Multiple_client_flavors),
 one for each supported game type, and __release.sh__ will use them to set the
 build's game version.
 
@@ -256,19 +256,21 @@ based on your existing preprocessing logic.  The fallback TOC file will use
 the base interface value as it's version.
 
 ```toc
-## Interface: 90205
-## Interface-Classic: 11403
+## Interface: 100205
+## Interface-Classic: 11501
 ## Interface-BCC: 20504
-## Interface-Wrath: 30400
+## Interface-Wrath: 30403
+## Interface-Cata: 40400
 ```
 
 Splitting the above TOC file would end up with `MyAddon_Vanilla.toc`,
-`MyAddon_TBC.toc`, `MyAddon_Wrath.toc`, and `MyAddon.toc` (retail).
+`MyAddon_TBC.toc`, `MyAddon_Wrath.toc`, `MyAddon_Cata.toc`, and `MyAddon.toc`
+(retail).
 
 If you use build version keywords (e.g., `@version-retail@` ... `@end-version-retail@`)
 for controlling what code blocks execute based on the build version, you
 need to switch to plain old Lua control statements.  Fortunately, there are
-some [constants](https://wowpedia.fandom.com/wiki/WOW_PROJECT_ID) set by
+some [constants](https://warcraft.wiki.gg/wiki/WOW_PROJECT_ID) set by
 Blizzard you can use for this.  If you use these keywords in xml files, you
 will have to reorganize your includes in the appropriate TOC files.
 
@@ -319,13 +321,13 @@ Usage: release.sh [options]
 ```text
 Usage: release.sh -n "{template}"
   Set the package zip file name and upload file label. There are several string
-  substitutions you can use to include version control and build type infomation in
+  substitutions you can use to include version control and build type information in
   the file name and upload label.
 
   The default file name is "{package-name}-{project-version}{nolib}{classic}".
   The default upload label is "{project-version}{classic}{nolib}".
 
-  To set both, seperate with a ":", i.e, "{file template}:{label template}".
+  To set both, separate with a ":", i.e, "{file template}:{label template}".
   If either side of the ":" is blank, the default will be used. Not including a ":"
   will set the file name template, leaving upload label as default.
 
